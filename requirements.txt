@@ -1,0 +1,8 @@
+flask
+firebase-admin
+python-jose[cryptography]
+reportlab
+cryptography
+flask-cors
+python-dotenv
+pyjwt

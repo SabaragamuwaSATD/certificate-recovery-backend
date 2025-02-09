@@ -1,0 +1,26 @@
+# Ignore Python bytecode files
+__pycache__/
+*.py[cod]
+
+# Ignore virtual environment directories
+venv/
+.env/
+
+# Ignore environment variable files
+.env
+
+# Ignore service account keys
+serviceAccountKey.json
+
+# Ignore IDE specific files
+.idea/
+.vscode/
+
+# Ignore log files
+*.log
+
+# Ignore compiled files
+*.so
+*.o
+*.a
+*.out
