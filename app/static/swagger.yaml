@@ -1,0 +1,95 @@
+openapi: 3.0.0
+info:
+  title: Certificate Request API
+  description: API to create certificate requests and extract signatures from NICs.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5000
+
+paths:
+  /api/certificates/request:
+    post:
+      summary: Create a Certificate Request
+      description: Submits a new certificate request and extracts a signature from NIC.
+      tags:
+        - Certificate
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                oldDocumentCopy:
+                  type: string
+                  format: binary
+                  description: Old certificate document (PDF/Image)
+                NIC:
+                  type: string
+                  format: binary
+                  description: NIC image containing the signature
+                fullName:
+                  type: string
+                  description: Full name of the user
+                facultyName:
+                  type: string
+                  description: Faculty name
+                studentId:
+                  type: string
+                  description: Student ID
+                dob:
+                  type: string
+                  format: date
+                  description: Date of birth
+                address:
+                  type: string
+                  description: Address
+                email:
+                  type: string
+                  format: email
+                  description: Email ID
+                phoneNumber:
+                  type: string
+                  description: Contact number
+                eventName:
+                  type: string
+                  description: Name of the event
+                certificateType:
+                  type: string
+                  description: Type of certificate
+                dateIssued:
+                  type: string
+                  format: date
+                  description: Date the certificate was issued
+                reason:
+                  type: string
+                  description: Reason for requesting the certificate
+
+      responses:
+        "201":
+          description: Request submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Request submitted successfully"
+                  request_id:
+                    type: string
+                    example: "12345"
+        "400":
+          description: Invalid input
+        "500":
+          description: Server error
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

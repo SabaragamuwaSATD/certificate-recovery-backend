@@ -16,25 +16,45 @@ class CertificateService:
             data = request.form
             files = request.files
 
-            # Upload supporting document
-            doc_url = FirebaseService.upload_file(
-                files['document'],
-                f"requests/{user['uid']}/{datetime.now().isoformat()}_{files['document'].filename}"
+            # Upload supporting documents
+            old_doc_url = FirebaseService.upload_file(
+                files['oldDocumentCopy'],
+                f"requests/{user['uid']}/{datetime.now().isoformat()}_{files['oldDocumentCopy'].filename}"
+            )
+            nic_url = FirebaseService.upload_file(
+                files['NIC'],
+                f"requests/{user['uid']}/{datetime.now().isoformat()}_{files['NIC'].filename}"
             )
 
             # Create request record
             request_data = {
                 'user_id': user['uid'],
                 'status': 'pending',
-                'document_url': doc_url,
+                'old_document_url': old_doc_url,
+                'nic_url': nic_url,
                 'created_at': datetime.now().isoformat(),
-                'athlete_name': data.get('athlete_name'),
-                'event_details': data.get('event_details')
+                'full_name': data.get('fullName'),
+                'faculty_name': data.get('facultyName'),
+                'student_id': data.get('studentId'),
+                'dob': data.get('dob'),
+                'address': data.get('address'),
+                'email': data.get('email'),
+                'phone_number': data.get('phoneNumber'),
+                'event_name': data.get('eventName'),
+                'certificate_type': data.get('certificateType'),
+                'date_issued': data.get('dateIssued'),
+                'reason': data.get('reason')
             }
 
-            FirebaseService.create_document('certificate_requests', request_data)
+            # Add the request to the database and get the request_id
+            doc_ref = FirebaseService.db.collection('certificate_requests').add(request_data)
+            request_id = doc_ref[1].id
 
-            return {'message': 'Request submitted successfully'}, 201
+            # Update the request data with the request_id
+            request_data['request_id'] = request_id
+            FirebaseService.db.collection('certificate_requests').document(request_id).set(request_data)
+
+            return {'message': 'Request submitted successfully', 'request_id': request_id}, 201
 
         except Exception as e:
             raise CertificateError(str(e))

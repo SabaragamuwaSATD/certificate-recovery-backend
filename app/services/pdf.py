@@ -5,6 +5,8 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from app.services.firebase import FirebaseService
 import tempfile
 
+from app.utils.exceptions import CertificateError
+
 
 class PDFService:
     @staticmethod
@@ -19,8 +21,8 @@ class PDFService:
             c.drawCentredString(300, 700, "OFFICIAL SPORTS CERTIFICATE")
 
             c.setFont("Helvetica", 18)
-            c.drawString(100, 650, f"Athlete Name: {data['athlete_name']}")
-            c.drawString(100, 600, f"Event: {data['event_details']}")
+            c.drawString(100, 650, f"Athlete Name: {data['full_name']}")
+            c.drawString(100, 600, f"Event: {data['event_name']}")
             c.drawString(100, 550, f"Issue Date: {data['created_at']}")
 
             # Save PDF
