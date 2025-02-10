@@ -3,7 +3,11 @@ firebase-admin~=6.6.0
 python-jose[cryptography]
 reportlab~=4.3.0
 cryptography~=44.0.0
-flask-cors
+flask-cors~=5.0.0
 python-dotenv
 pyjwt~=2.10.1
 flask-swagger-ui~=4.11.1
+opencv-python~=4.11.0.86
+numpy~=2.2.2
+pillow~=11.1.0
+requests~=2.32.3

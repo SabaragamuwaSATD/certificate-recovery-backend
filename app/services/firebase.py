@@ -1,4 +1,8 @@
+from io import BytesIO
+
 from firebase_admin import credentials, firestore, storage, initialize_app
+import requests
+
 from app.config import Config
 
 # Initialize Firebase once
@@ -14,8 +18,19 @@ class FirebaseService:
 
     @staticmethod
     def upload_file(file, path):
+        # If the file is a URL, download it first
+        if isinstance(file, str) and file.startswith('http'):
+            file_response = requests.get(file)
+            file = BytesIO(file_response.content)  # Convert the content to a file-like object
+
+        # Check if the file is a file-like object, and if not, open it
+        if not hasattr(file, 'read'):
+            # If file is a path, open it as a binary stream
+            with open(file, 'rb') as f:
+                file = f  # Now file is a file-like object
+
         blob = FirebaseService.bucket.blob(path)
-        blob.upload_from_file(file)
+        blob.upload_from_file(file)  # Pass the file-like object
         blob.make_public()
         return blob.public_url
 
