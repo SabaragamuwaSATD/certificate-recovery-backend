@@ -11,3 +11,6 @@ opencv-python~=4.11.0.86
 numpy~=2.2.2
 pillow~=11.1.0
 requests~=2.32.3
+qrcode~=8.0
+django-qrcode~=0.3
+pdfrw~=0.4
