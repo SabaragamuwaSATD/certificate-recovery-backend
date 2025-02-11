@@ -1,3 +1,4 @@
+import os
 from flask import request
 from app.services.firebase import FirebaseService
 from app.utils.exceptions import CertificateError
@@ -6,9 +7,14 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 from app.utils.certificate_generator import generate_certificate
 
-# Register the "Young Serif" font
-pdfmetrics.registerFont(TTFont('YoungSerif', 'C:/Users/Dell/PycharmProjects/PythonProject/FlaskProject/app/services/templates/YoungSerif-Regular.ttf'))
+# Get the directory of the current file
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
+# Construct the path to the font file
+font_path = os.path.join(current_dir, '../services/templates/YoungSerif-Regular.ttf')
+
+# Register the "Young Serif" font
+pdfmetrics.registerFont(TTFont('YoungSerif', font_path))
 
 class CertificateService:
 
