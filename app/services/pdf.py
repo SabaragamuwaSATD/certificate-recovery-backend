@@ -1,7 +1,5 @@
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import padding
 from app.services.firebase import FirebaseService
 import tempfile
 

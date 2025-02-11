@@ -11,6 +11,8 @@ pdfmetrics.registerFont(TTFont('YoungSerif', 'C:/Users/Dell/PycharmProjects/Pyth
 
 
 class CertificateService:
+
+#Request for certificate replacement
     @staticmethod
     def create_request(user):
         try:
@@ -64,6 +66,7 @@ class CertificateService:
         except Exception as e:
             raise CertificateError(str(e))
 
+#Get status of the request for users not admin
     @staticmethod
     def get_status(user):
         try:
@@ -72,7 +75,8 @@ class CertificateService:
         except Exception as e:
             raise CertificateError(str(e))
 
-    # Add to CertificateService class
+
+# Add to CertificateService class
     @staticmethod
     def get_all_pending_requests():
         try:
@@ -83,6 +87,7 @@ class CertificateService:
         except Exception as e:
             raise CertificateError(str(e))
 
+#Approve request for admin
     @staticmethod
     def approve_request(request_id):
         try:
@@ -109,13 +114,20 @@ class CertificateService:
             FirebaseService.db.collection('certificates').document(request_id).set({
                 'certificate_url': certificate_url,
                 'user_id': request_data['user_id'],
-                'created_at': datetime.now().isoformat()
+                'created_at': datetime.now().isoformat(),
+                'event_name': request_data['event_name'],
+                'date_issued': request_data['date_issued'],
+                'full_name': request_data['full_name'],
+                'reason': request_data['reason'],
+                'request_id': request_data['request_id'],
+                'certificate_id': request_id
             })
 
             return {'message': 'Request approved successfully'}, 200
         except Exception as e:
             raise CertificateError(str(e))
 
+#Reject request for admin
     @staticmethod
     def reject_request(request_id):
         try:
@@ -125,6 +137,7 @@ class CertificateService:
         except Exception as e:
             raise CertificateError(str(e))
 
+#Download certificate for users
     @staticmethod
     def download_certificate(user, request_id):
         try:
@@ -139,6 +152,7 @@ class CertificateService:
         except Exception as e:
             raise CertificateError(str(e))
 
+#Delete request for users
     @staticmethod
     def delete_request(user, request_id):
         try:
@@ -150,6 +164,24 @@ class CertificateService:
             # Delete the request
             FirebaseService.db.collection('certificate_requests').document(request_id).delete()
             return {'message': 'Request deleted successfully'}, 200
+        except Exception as e:
+            raise CertificateError(str(e))
+
+#get specific user certificates for users
+    @staticmethod
+    def get_certificates(user):
+        try:
+            certificates = FirebaseService.get_user_certificates(user['uid'])
+            return {'certificates': certificates}, 200
+        except Exception as e:
+            raise CertificateError(str(e))
+
+#get all certificates for admin
+    @staticmethod
+    def get_all_certificates():
+        try:
+            docs = FirebaseService.db.collection('certificates').stream()
+            return {'certificates': [doc.to_dict() for doc in docs]}, 200
         except Exception as e:
             raise CertificateError(str(e))
 

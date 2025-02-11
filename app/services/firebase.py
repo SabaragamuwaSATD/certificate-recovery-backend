@@ -46,3 +46,10 @@ class FirebaseService:
             .where('user_id', '==', user_id) \
             .stream()
         return [doc.to_dict() for doc in docs]
+
+    @staticmethod
+    def get_user_certificates(user_id):
+        docs = FirebaseService.db.collection('certificates') \
+            .where('user_id', '==', user_id) \
+            .stream()
+        return [doc.to_dict() for doc in docs]

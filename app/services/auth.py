@@ -4,14 +4,11 @@ from firebase_admin import auth
 from app.config import Config
 from app.utils.exceptions import AuthError
 from flask import jsonify
-from app.services.firebase import FirebaseService
 
-
-# app/services/auth.py
-
-from flask import request
 
 class AuthService:
+
+#login_user method
     @staticmethod
     def login_user(data):
         try:
@@ -30,6 +27,7 @@ class AuthService:
         except Exception as e:
             raise AuthError(str(e))
 
+#register_user method
     @staticmethod
     def register_user(data):
         try:
