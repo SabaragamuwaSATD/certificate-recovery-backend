@@ -18,10 +18,12 @@ def create_app():
     from app.routes.auth import auth_bp
     from app.routes.certificates import cert_bp
     from app.routes.admin import admin_bp
+    from app.routes.profile import profile_bp
 
     app.register_blueprint(auth_bp, url_prefix='/api/auth')
     app.register_blueprint(cert_bp, url_prefix='/api/certificates')
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
+    app.register_blueprint(profile_bp, url_prefix='/api/profile')
 
     # Swagger UI setup
     SWAGGER_URL = "/api/docs"
