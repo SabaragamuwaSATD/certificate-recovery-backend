@@ -17,6 +17,7 @@ class FirebaseService:
     bucket = storage.bucket(Config.FIREBASE_CONFIG['storageBucket'])
 
 
+# upload files to firebase
     @staticmethod
     def upload_file(file, path):
         # If the file is a URL, download it first
@@ -35,12 +36,14 @@ class FirebaseService:
         blob.make_public()
         return blob.public_url
 
+# create collection documents
     @staticmethod
     def create_document(collection, data):
         doc_ref = FirebaseService.db.collection(collection).document()
         doc_ref.set(data)
         return doc_ref.id
 
+# get user certificate replacement requests
     @staticmethod
     def get_user_requests(user_id):
         docs = FirebaseService.db.collection('certificate_requests') \
@@ -48,6 +51,7 @@ class FirebaseService:
             .stream()
         return [doc.to_dict() for doc in docs]
 
+# get user certificates
     @staticmethod
     def get_user_certificates(user_id):
         docs = FirebaseService.db.collection('certificates') \
@@ -57,6 +61,7 @@ class FirebaseService:
 
 #------------------------------------------------------------------------------
 
+# get user data
     @staticmethod
     def get_user(user_id):
         try:
@@ -73,6 +78,7 @@ class FirebaseService:
         except auth.UserNotFoundError:
             return None
 
+# update user data
     @staticmethod
     def update_user(user_id, user_data):
         try:
@@ -93,6 +99,7 @@ class FirebaseService:
         except auth.UserNotFoundError:
             return None
 
+# get all users
     @staticmethod
     def get_all_users():
         users = auth.list_users().iterate_all()
@@ -100,6 +107,7 @@ class FirebaseService:
              'role': user.custom_claims.get('role') if user.custom_claims else None} for user in users if
             user.custom_claims and user.custom_claims.get('role') == 'athlete']
 
+# get all admins
     @staticmethod
     def get_all_admins():
         users = auth.list_users().iterate_all()
@@ -107,6 +115,7 @@ class FirebaseService:
                  'role': user.custom_claims.get('role') if user.custom_claims else None} for user in users if
                 user.custom_claims and user.custom_claims.get('role') == 'admin']
 
+# create new Admin
     @staticmethod
     def create_user(user_data):
         user = auth.create_user(
@@ -129,6 +138,7 @@ class FirebaseService:
         })
         return user
 
+# get individual athlete data
     @staticmethod
     def get_athlete(user_id):
         try:
@@ -147,6 +157,7 @@ class FirebaseService:
         except auth.UserNotFoundError:
             return None
 
+# get individual admin data
     @staticmethod
     def get_admin(uid):
         try:

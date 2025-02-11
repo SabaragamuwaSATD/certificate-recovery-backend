@@ -6,6 +6,7 @@ from app.services.firebase import FirebaseService
 
 profile_bp = Blueprint('profile', __name__)
 
+# update profile admin and as well as normal user its based on user_id send with form data
 @profile_bp.route('/update', methods=['POST'])
 @admin_required
 def update_profile(payload):
@@ -38,6 +39,8 @@ def update_profile(payload):
     FirebaseService.update_user(user_id, user)
     return jsonify({'message': 'Profile updated successfully'}), 200
 
+
+# get profile details of normal user based on user_id
 @profile_bp.route('/athlete/<user_id>', methods=['GET'])
 @token_required(roles=['admin'])
 def get_athlete_details(current_user, user_id):
@@ -46,6 +49,7 @@ def get_athlete_details(current_user, user_id):
         return jsonify({'message': 'Athlete not found'}), 404
     return jsonify(athlete), 200
 
+# get profile details of admin user based on user_id
 @profile_bp.route('/admin/<user_id>', methods=['GET'])
 @token_required(roles=['admin'])
 def get_admin_details(current_user, user_id):

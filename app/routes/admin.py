@@ -38,18 +38,21 @@ def get_certificate(current_user, certificate_id):
     return CertificateService.get_certificate(certificate_id)
 
 #--------------------------------------------------------------------------------------
+# Get all non-admin users
 @admin_bp.route('/users', methods=['GET'])
 @token_required(roles=['admin'])
 def view_users(payload):
     users = FirebaseService.get_all_users()
     return jsonify({'users': users}), 200
 
+# Get all admins
 @admin_bp.route('/admins', methods=['GET'])
 @token_required(roles=['admin'])
 def view_admins(payload):
     admins = FirebaseService.get_all_admins()
     return jsonify({'admins': admins}), 200
 
+# Create admin by admin
 @admin_bp.route('/create', methods=['POST'])
 @token_required(roles=['admin'])
 def create_admin(payload):

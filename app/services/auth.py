@@ -9,12 +9,14 @@ import bcrypt
 class AuthService:
     db = firestore.client()
 
+#passowrd hashing
     @staticmethod
     def hash_password(password):
         salt = bcrypt.gensalt()
         hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
         return hashed.decode('utf-8')
 
+#login user
     @staticmethod
     def login_user(data):
         try:
@@ -33,6 +35,7 @@ class AuthService:
         except Exception as e:
             raise AuthError(str(e))
 
+#register user
     @staticmethod
     def register_user(data):
         try:
@@ -67,6 +70,7 @@ class AuthService:
         except Exception as e:
             raise AuthError(str(e))
 
+#get current user who is logged in
     @staticmethod
     def get_current_user(payload):
         token = request.headers.get('Authorization').split()[1]
