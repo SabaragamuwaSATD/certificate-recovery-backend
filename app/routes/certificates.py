@@ -15,3 +15,13 @@ def create_request(current_user):
 @token_required(roles=['athlete'])
 def get_status(current_user):
     return CertificateService.get_status(current_user)
+
+@cert_bp.route('/download/<request_id>', methods=['GET'])
+@token_required(roles=['athlete'])
+def download_certificate(current_user, request_id):
+    return CertificateService.download_certificate(current_user, request_id)
+
+@cert_bp.route('/request/<request_id>', methods=['DELETE'])
+@token_required(roles=['athlete'])
+def delete_request(current_user, request_id):
+    return CertificateService.delete_request(current_user, request_id)

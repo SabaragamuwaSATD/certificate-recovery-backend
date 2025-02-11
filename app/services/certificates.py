@@ -74,10 +74,10 @@ class CertificateService:
 
     # Add to CertificateService class
     @staticmethod
-    def get_all_requests():
+    def get_all_pending_requests():
         try:
             docs = FirebaseService.db.collection('certificate_requests') \
-                .where('status', '==', 'pending') \
+                 \
                 .stream()
             return {'requests': [doc.to_dict() for doc in docs]}, 200
         except Exception as e:
@@ -113,6 +113,43 @@ class CertificateService:
             })
 
             return {'message': 'Request approved successfully'}, 200
+        except Exception as e:
+            raise CertificateError(str(e))
+
+    @staticmethod
+    def reject_request(request_id):
+        try:
+            doc_ref = FirebaseService.db.collection('certificate_requests').document(request_id)
+            doc_ref.update({'status': 'rejected'})
+            return {'message': 'Request rejected successfully'}, 200
+        except Exception as e:
+            raise CertificateError(str(e))
+
+    @staticmethod
+    def download_certificate(user, request_id):
+        try:
+            # Check if the user has access to the certificate
+            certificate = FirebaseService.db.collection('certificates').document(request_id).get().to_dict()
+            if certificate['user_id'] != user['uid']:
+                raise CertificateError('You do not have permission to access this certificate')
+
+            # Get the certificate URL
+            certificate_url = certificate['certificate_url']
+            return {'certificate_url': certificate_url}, 200
+        except Exception as e:
+            raise CertificateError(str(e))
+
+    @staticmethod
+    def delete_request(user, request_id):
+        try:
+            # Check if the user has access to the request
+            request_data = FirebaseService.db.collection('certificate_requests').document(request_id).get().to_dict()
+            if request_data['user_id'] != user['uid']:
+                raise CertificateError('You do not have permission to delete this request')
+
+            # Delete the request
+            FirebaseService.db.collection('certificate_requests').document(request_id).delete()
+            return {'message': 'Request deleted successfully'}, 200
         except Exception as e:
             raise CertificateError(str(e))
 
