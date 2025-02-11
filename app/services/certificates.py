@@ -167,12 +167,21 @@ class CertificateService:
         except Exception as e:
             raise CertificateError(str(e))
 
-#get specific user certificates for users
+#get specific certificates for users
     @staticmethod
     def get_certificates(user):
         try:
             certificates = FirebaseService.get_user_certificates(user['uid'])
             return {'certificates': certificates}, 200
+        except Exception as e:
+            raise CertificateError(str(e))
+
+#get specific certificate for admin
+    @staticmethod
+    def get_certificate(certificate_id):
+        try:
+            certificate = FirebaseService.db.collection('certificates').document(certificate_id).get().to_dict()
+            return {'certificate': certificate}, 200
         except Exception as e:
             raise CertificateError(str(e))
 

@@ -1,4 +1,5 @@
 # utils/certificate_generator.py
+import os
 import tempfile
 import qrcode
 from PIL import Image
@@ -9,14 +10,19 @@ from app.utils.exceptions import CertificateError
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 
-# Register the "Young Serif" font
-pdfmetrics.registerFont(TTFont('YoungSerif', 'C:/Users/Dell/PycharmProjects/PythonProject/FlaskProject/app/services/templates/YoungSerif-Regular.ttf'))
 
+# Get the directory of the current file
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct the path to the font file
+font_path = os.path.join(current_dir, '../services/templates/YoungSerif-Regular.ttf')
+# Register the "Young Serif" font
+pdfmetrics.registerFont(TTFont('YoungSerif', font_path))
 
 def generate_certificate(data):
     try:
-        # Path to the certificate template
-        template_path = 'C:/Users/Dell/PycharmProjects/PythonProject/FlaskProject/app/services/templates/certify.pdf'
+        # Construct the path to the certificate template
+        template_path = os.path.join(current_dir, '../services/templates/certify.pdf')
         output_path = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf').name
 
         # Read the template PDF
@@ -83,7 +89,8 @@ def generate_certificate(data):
         c.drawImage(qr_path, 10, 20, width=100, height=100)
 
         # Add e-signature
-        signature_path = 'C:/Users/Dell/PycharmProjects/PythonProject/FlaskProject/app/services/templates/signature.png'
+        # Construct the path to the signature image
+        signature_path = os.path.join(current_dir, '../services/templates/signature.png')
         signature_img = Image.open(signature_path)
 
         if signature_img.mode == "RGBA":
@@ -91,7 +98,7 @@ def generate_certificate(data):
             background.paste(signature_img, mask=signature_img.split()[3])
             signature_img = background
 
-        processed_signature_path = 'C:/Users/Dell/PycharmProjects/PythonProject/FlaskProject/app/services/templates/signature_fixed.jpg'
+        processed_signature_path = os.path.join(current_dir, '../services/templates/signature_fixed.jpg')
         signature_img.save(processed_signature_path)
 
         c.drawImage(processed_signature_path, 150, 130, width=160, height=60)

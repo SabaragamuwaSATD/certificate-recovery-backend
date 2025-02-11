@@ -27,3 +27,9 @@ def reject_request(current_user, request_id):
 @token_required(roles=['admin'])
 def get_all_certificates(current_user):
     return CertificateService.get_all_certificates()
+
+#Get specific certificate
+@admin_bp.route('/certificate/<certificate_id>', methods=['GET'])
+@token_required(roles=['admin'])
+def get_certificate(current_user, certificate_id):
+    return CertificateService.get_certificate(certificate_id)
