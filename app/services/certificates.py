@@ -1,6 +1,7 @@
 import os
 from flask import request
 from app.services.firebase import FirebaseService
+from app.utils.email_service import EmailService
 from app.utils.exceptions import CertificateError
 from datetime import datetime
 from reportlab.pdfbase.ttfonts import TTFont
@@ -128,6 +129,11 @@ class CertificateService:
                 'request_id': request_data['request_id'],
                 'certificate_id': request_id
             })
+
+            # Send the certificate link via email
+            user_email = request_data['email']
+            EmailService.send_certificate_email(user_email, certificate_url)
+
 
             return {'message': 'Request approved successfully'}, 200
         except Exception as e:
