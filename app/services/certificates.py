@@ -73,26 +73,25 @@ class CertificateService:
         except Exception as e:
             raise CertificateError(str(e))
 
-#Get status of the request for users not admin
-    @staticmethod
-    def get_status(user):
-        try:
-            requests = FirebaseService.get_user_requests(user['uid'])
-            return {'requests': requests}, 200
-        except Exception as e:
-            raise CertificateError(str(e))
-
+# #Get status of the request for users not admin
+# @staticmethod
+# def get_status(user):
+#     try:
+#         requests = FirebaseService.get_user_requests(user['uid'])
+#         return {'requests': requests}, 200
+#     except Exception as e:
+#         raise CertificateError(str(e))
 
 # Add to CertificateService class
-    @staticmethod
-    def get_all_pending_requests():
-        try:
-            docs = FirebaseService.db.collection('certificate_requests') \
-                 \
-                .stream()
-            return {'requests': [doc.to_dict() for doc in docs]}, 200
-        except Exception as e:
-            raise CertificateError(str(e))
+# @staticmethod
+# def get_all_pending_requests():
+#     try:
+#         docs = FirebaseService.db.collection('certificate_requests') \
+#              \
+#             .stream()
+#         return {'requests': [doc.to_dict() for doc in docs]}, 200
+#     except Exception as e:
+#         raise CertificateError(str(e))
 
 #Approve request for admin
     @staticmethod
@@ -139,45 +138,45 @@ class CertificateService:
         except Exception as e:
             raise CertificateError(str(e))
 
-#Reject request for admin
-    @staticmethod
-    def reject_request(request_id):
-        try:
-            doc_ref = FirebaseService.db.collection('certificate_requests').document(request_id)
-            doc_ref.update({'status': 'rejected'})
-            return {'message': 'Request rejected successfully'}, 200
-        except Exception as e:
-            raise CertificateError(str(e))
+# #Reject request for admin
+# @staticmethod
+# def reject_request(request_id):
+#     try:
+#         doc_ref = FirebaseService.db.collection('certificate_requests').document(request_id)
+#         doc_ref.update({'status': 'rejected'})
+#         return {'message': 'Request rejected successfully'}, 200
+#     except Exception as e:
+#         raise CertificateError(str(e))
 
-#Download certificate for users
-    @staticmethod
-    def download_certificate(user, request_id):
-        try:
-            # Check if the user has access to the certificate
-            certificate = FirebaseService.db.collection('certificates').document(request_id).get().to_dict()
-            if certificate['user_id'] != user['uid']:
-                raise CertificateError('You do not have permission to access this certificate')
+# #Download certificate for users
+            # @staticmethod
+            # def download_certificate(user, request_id):
+            #     try:
+            #         # Check if the user has access to the certificate
+            #         certificate = FirebaseService.db.collection('certificates').document(request_id).get().to_dict()
+            #         if certificate['user_id'] != user['uid']:
+            #             raise CertificateError('You do not have permission to access this certificate')
 
-            # Get the certificate URL
-            certificate_url = certificate['certificate_url']
-            return {'certificate_url': certificate_url}, 200
-        except Exception as e:
-            raise CertificateError(str(e))
+            #         # Get the certificate URL
+            #         certificate_url = certificate['certificate_url']
+            #         return {'certificate_url': certificate_url}, 200
+            #     except Exception as e:
+            #         raise CertificateError(str(e))
 
-#Delete request for users
-    @staticmethod
-    def delete_request(user, request_id):
-        try:
-            # Check if the user has access to the request
-            request_data = FirebaseService.db.collection('certificate_requests').document(request_id).get().to_dict()
-            if request_data['user_id'] != user['uid']:
-                raise CertificateError('You do not have permission to delete this request')
+            # #Delete request for users
+            # @staticmethod
+            # def delete_request(user, request_id):
+            #     try:
+            #         # Check if the user has access to the request
+            #         request_data = FirebaseService.db.collection('certificate_requests').document(request_id).get().to_dict()
+            #         if request_data['user_id'] != user['uid']:
+            #             raise CertificateError('You do not have permission to delete this request')
 
-            # Delete the request
-            FirebaseService.db.collection('certificate_requests').document(request_id).delete()
-            return {'message': 'Request deleted successfully'}, 200
-        except Exception as e:
-            raise CertificateError(str(e))
+            #         # Delete the request
+            #         FirebaseService.db.collection('certificate_requests').document(request_id).delete()
+            #         return {'message': 'Request deleted successfully'}, 200
+            #     except Exception as e:
+            #         raise CertificateError(str(e))
 
 #get specific certificates for users
     @staticmethod
@@ -197,12 +196,12 @@ class CertificateService:
         except Exception as e:
             raise CertificateError(str(e))
 
-#get all certificates for admin
-    @staticmethod
-    def get_all_certificates():
-        try:
-            docs = FirebaseService.db.collection('certificates').stream()
-            return {'certificates': [doc.to_dict() for doc in docs]}, 200
-        except Exception as e:
-            raise CertificateError(str(e))
+# #get all certificates for admin
+# @staticmethod
+# def get_all_certificates():
+#     try:
+#         docs = FirebaseService.db.collection('certificates').stream()
+#         return {'certificates': [doc.to_dict() for doc in docs]}, 200
+#     except Exception as e:
+#         raise CertificateError(str(e))
 
